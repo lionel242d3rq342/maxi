@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
   <title>Sentido Noticias</title>
   <style>
     body {
@@ -75,6 +75,12 @@
       text-align: center;
       margin: 20px 0;
     }
+    .ads-container iframe {
+      max-width: 100%;
+    }
+    .ads-lateral {
+      display: none;
+    }
     .modal {
       display: none;
       position: fixed;
@@ -84,11 +90,12 @@
       z-index: 9999;
       justify-content: center;
       align-items: center;
+      padding: 10px;
     }
     .modal-content {
       background: #1a1a1a;
       max-width: 600px;
-      width: 90%;
+      width: 100%;
       padding: 20px;
       border-radius: 10px;
       position: relative;
@@ -137,6 +144,12 @@
       color: #aaa;
       font-size: 14px;
     }
+
+    @media screen and (min-width: 1000px) {
+      .ads-lateral {
+        display: block;
+      }
+    }
   </style>
 </head>
 <body>
@@ -144,8 +157,7 @@
 <header>
   <h1>SENTIDO NOTICIAS</h1>
   <p>"Siempre Informándote y manteniéndote al día"</p>
-  
-  <!-- Banner grande (728x90) -->
+
   <div class="ads-container">
     <script type="text/javascript">
       atOptions = {
@@ -156,7 +168,7 @@
         'params' : {}
       };
     </script>
-    <script type="text/javascript" src="//www.highperformanceformat.com/140ef921c2e7acdc8f6401f59b5b9405/invoke.js"></script>
+    <script src="//www.highperformanceformat.com/140ef921c2e7acdc8f6401f59b5b9405/invoke.js"></script>
   </div>
 </header>
 
@@ -170,8 +182,8 @@
   <div id="search-results"></div>
 </nav>
 
-<!-- Banner lateral (160x300) -->
-<div class="ads-container">
+<!-- Banner lateral (solo en PC) -->
+<div class="ads-container ads-lateral">
   <script type="text/javascript">
     atOptions = {
       'key' : '8df38bec465a64de83655d8b11ba4399',
@@ -181,12 +193,12 @@
       'params' : {}
     };
   </script>
-  <script type="text/javascript" src="//www.highperformanceformat.com/8df38bec465a64de83655d8b11ba4399/invoke.js"></script>
+  <script src="//www.highperformanceformat.com/8df38bec465a64de83655d8b11ba4399/invoke.js"></script>
 </div>
 
 <div class="grid" id="contenedor-noticias"></div>
 
-<!-- Banner cuadrado (300x250) -->
+<!-- Banner cuadrado -->
 <div class="ads-container">
   <script type="text/javascript">
     atOptions = {
@@ -197,7 +209,7 @@
       'params' : {}
     };
   </script>
-  <script type="text/javascript" src="//www.highperformanceformat.com/69d7d95e25a394c902cd42399dcd24db/invoke.js"></script>
+  <script src="//www.highperformanceformat.com/69d7d95e25a394c902cd42399dcd24db/invoke.js"></script>
 </div>
 
 <div class="modal" id="modal">
@@ -207,7 +219,6 @@
 </div>
 
 <footer>
-  <!-- Banner inferior (320x50) -->
   <div class="ads-container">
     <script type="text/javascript">
       atOptions = {
@@ -218,7 +229,7 @@
         'params' : {}
       };
     </script>
-    <script type="text/javascript" src="//www.highperformanceformat.com/9866895f1fae5758d117b1689c6e812f/invoke.js"></script>
+    <script src="//www.highperformanceformat.com/9866895f1fae5758d117b1689c6e812f/invoke.js"></script>
   </div>
   <p>© 2025 Sentido Noticias | Todos los derechos reservados</p>
   <p><a href="https://facebook.com/profile.php?id=61577135682804" target="_blank" style="color: #888;">Visítanos en Facebook</a></p>
