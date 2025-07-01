@@ -71,6 +71,16 @@
       font-size: 1.1rem;
       color: #f4c430;
     }
+    .ads-container {
+      text-align: center;
+      margin: 20px 0;
+    }
+    .ads-container iframe {
+      max-width: 100%;
+    }
+    .ads-lateral {
+      display: none;
+    }
     .modal {
       display: none;
       position: fixed;
@@ -112,9 +122,53 @@
       color: #fff;
       cursor: pointer;
     }
+    #search-results {
+      display: none;
+      position: absolute;
+      background: #1a1a1a;
+      border: 1px solid #555;
+      z-index: 10;
+      max-height: 300px;
+      overflow-y: auto;
+      width: 250px;
+    }
+    #search-results div {
+      padding: 10px;
+      cursor: pointer;
+      border-bottom: 1px solid #333;
+    }
+    #search-results div:hover {
+      background: #333;
+    }
     footer p {
       color: #aaa;
       font-size: 14px;
+    }
+
+    #boton-apoyo {
+      background-color: #f4c430;
+      color: #000;
+      font-weight: bold;
+      padding: 12px 20px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      margin: 20px auto;
+      display: block;
+      font-size: 16px;
+    }
+
+    #mensaje-apoyo {
+      text-align: center;
+      font-size: 14px;
+      color: #ccc;
+      margin-top: 10px;
+    }
+
+    @media screen and (min-width: 1000px) {
+      .ads-lateral {
+        display: block;
+      }
     }
   </style>
 </head>
@@ -135,15 +189,9 @@
   <div id="search-results"></div>
 </nav>
 
-<!-- ✅ Mensaje + Botón -->
-<p style="text-align:center; font-size:15px; color:#ccc;">
-  Si te gusta nuestro contenido, haz clic en el botón y ¡nos ayudas muchísimo! 💛
-</p>
-<div style="text-align:center; margin-bottom: 20px;">
-  <button id="btn-apoyar" style="background-color: #f4c430; color: #000; padding: 10px 20px; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer;">
-    ❤️ Haz clic aquí para apoyarnos
-  </button>
-</div>
+<!-- Botón de apoyo -->
+<button id="boton-apoyo" onclick="apoyarSitio()">❤️ Haz clic aquí para apoyarnos</button>
+<p id="mensaje-apoyo">Con solo un clic nos ayudas muchísimo. ¡Gracias por tu apoyo!</p>
 
 <div class="grid" id="contenedor-noticias"></div>
 
@@ -158,24 +206,11 @@
   <p><a href="https://facebook.com/profile.php?id=61577135682804" target="_blank" style="color: #888;">Visítanos en Facebook</a></p>
 </footer>
 
-<!-- ✅ Script que activa popunder SOLO UNA VEZ -->
-<script>
-document.getElementById("btn-apoyar").addEventListener("click", function() {
-  if (!sessionStorage.getItem("popunder_activado")) {
-    const script = document.createElement("script");
-    script.src = "//pl27057305.profitableratecpm.com/70/7b/fd/707bfd7811bcfdfa404d5a9e8a799953.js";
-    document.body.appendChild(script);
-    sessionStorage.setItem("popunder_activado", "true");
-  }
-  alert("¡Gracias por tu apoyo!");
-});
-</script>
-
-<!-- Noticias desde Google Sheets -->
 <script>
 const hojaID = "1HfqS-_6KGyPX9H5EPZMSxDPmfp2pHMGtJXNJXqf5k9Y";
 const url = `https://docs.google.com/spreadsheets/d/${hojaID}/gviz/tq?tqx=out:json&sheet=Hoja1`;
-let todasNoticias = [], noticiasClima = [];
+let todasNoticias = [];
+let noticiasClima = [];
 
 async function cargarNoticias() {
   try {
@@ -204,10 +239,7 @@ function mostrarNoticias(noticias) {
   noticias.reverse().forEach((n) => {
     const div = document.createElement("div");
     div.className = "card";
-    div.innerHTML = `
-      <img src="${n.imagen}" alt="noticia">
-      <h3>${n.titulo}</h3>
-    `;
+    div.innerHTML = `<img src="${n.imagen}" alt="noticia"><h3>${n.titulo}</h3>`;
     div.onclick = () => abrirModal(n);
     contenedor.appendChild(div);
   });
@@ -215,10 +247,7 @@ function mostrarNoticias(noticias) {
 
 function filtrarCategoria(cat) {
   if (cat === "todo") mostrarNoticias(todasNoticias);
-  else {
-    const filtradas = todasNoticias.filter(n => n.categoria === cat);
-    mostrarNoticias(filtradas);
-  }
+  else mostrarNoticias(todasNoticias.filter(n => n.categoria === cat));
 }
 
 function filtrarClima() {
@@ -228,8 +257,7 @@ function filtrarClima() {
 function buscarNoticias() {
   const texto = document.getElementById("buscador").value.toLowerCase();
   const resultados = [...todasNoticias, ...noticiasClima].filter(n =>
-    n.titulo.toLowerCase().includes(texto) ||
-    n.descripcion.toLowerCase().includes(texto)
+    n.titulo.toLowerCase().includes(texto) || n.descripcion.toLowerCase().includes(texto)
   );
   const cont = document.getElementById("search-results");
   cont.innerHTML = "";
@@ -263,6 +291,17 @@ function abrirModal(n) {
 
 function cerrarModal() {
   document.getElementById("modal").style.display = "none";
+}
+
+function apoyarSitio() {
+  const ahora = Date.now();
+  const ultimaVez = localStorage.getItem("ultimoClicApoyo");
+  if (!ultimaVez || ahora - parseInt(ultimaVez) > 3600000) {
+    localStorage.setItem("ultimoClicApoyo", ahora);
+    window.open("https://www.profitableratecpm.com/zm7spp5kcv?key=50a3ec2a15a19d82966a2cd958ab942b", "_blank");
+  } else {
+    alert("¡Gracias! Ya nos apoyaste hace poco. Puedes volver a hacerlo en 1 hora.");
+  }
 }
 
 cargarNoticias();
